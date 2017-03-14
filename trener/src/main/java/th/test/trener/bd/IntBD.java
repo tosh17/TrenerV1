@@ -13,6 +13,9 @@ import th.test.trener.eprogs.*;
  * @author a_scherbakov
  */
 public interface IntBD {
+   
+    public void connect();
+    
     public EExes getExes(int id);
     public EDay getDay(int id,int number);
     public EProg getProg(int id);

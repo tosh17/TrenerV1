@@ -19,12 +19,12 @@ import th.test.trener.eprogs.EProg;
 public class CollectionBD implements IntBD {
 
     static boolean stat = true;
-    static CollectionBD db;
+    static IntBD db;
 
     private CollectionBD() {
     }
 
-    public static CollectionBD init() {
+    public static IntBD init() {
         if (stat) {
             stat = false;
             db = new CollectionBD();
@@ -45,6 +45,11 @@ public class CollectionBD implements IntBD {
     @Override
     public EProg getProg(int id) {
         return CollExes.getProg(id);
+    }
+
+    @Override
+    public void connect() {
+      //не требуется
     }
 
 }

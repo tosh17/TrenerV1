@@ -18,6 +18,8 @@ public class FabricBD {
         switch(metod){
             case Collection:
                 return CollectionBD.init();
+            case SQLite:
+                return SQLiteBD.init();
         }
         return null;
     }

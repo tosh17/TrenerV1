@@ -22,9 +22,11 @@ public class Tstart {
 
     public static void main(String[] args) {
         // TODO code application logic here
-        base = FabricBD.createBD(FabricBD.Metod.Collection);
-        System.out.println(base.getProg(1));
-       
+    //    base = FabricBD.createBD(FabricBD.Metod.Collection);
+      //  System.out.println(base.getProg(1));
+          base = FabricBD.createBD(FabricBD.Metod.SQLite);
+         base.connect();
+         base.getExes(2);
     }
 
 }
