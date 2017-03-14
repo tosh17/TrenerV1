@@ -15,6 +15,8 @@ import th.test.trener.eprogs.*;
 public interface IntBD {
    
     public boolean connect();
+    public boolean disconnect();
+    
     
     public EExes getExes(int id);
     public EPodhod getPodhod(int id);

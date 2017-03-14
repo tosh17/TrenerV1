@@ -74,12 +74,19 @@ public class CollectionBD implements IntBD {
 
     @Override
     public boolean writePodhod(EPodhod podhod) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+     //не требуется
+       return false;
     }
 
     @Override
     public EPodhod getPodhod(int id) {
         return CollExes.getPodhod(id);
+    }
+
+    @Override
+    public boolean disconnect() {
+        //не требуется
+       return true;
     }
 
 }

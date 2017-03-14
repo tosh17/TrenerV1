@@ -81,6 +81,8 @@ public class SQLiteBD implements IntBD {
                 int idPodhod = resSet.getInt("id_podhod");
                 day.addExes(getExes(idExes), getPodhod(idPodhod));
             }
+            resSet.close();
+            pstmt.close();
             return day;
 
         } catch (SQLException ex) {
@@ -144,6 +146,7 @@ public class SQLiteBD implements IntBD {
                     writePodhod(day.getPodhod(i));
                     rowCount = pstmt.executeUpdate();
 
+                    pstmt.close();
                 }
 
             }
@@ -168,6 +171,8 @@ public class SQLiteBD implements IntBD {
                 pstmt.setInt(1, exes.getId());
                 pstmt.setString(2, exes.getName());
                 int rowCount = pstmt.executeUpdate();
+
+                pstmt.close();
 
             }
         } catch (SQLException ex) {
@@ -194,7 +199,7 @@ public class SQLiteBD implements IntBD {
                 pstmt.setString(4, podhod.getStrMin());
                 pstmt.setString(5, podhod.getStrMax());
                 int rowCount = pstmt.executeUpdate();
-
+                pstmt.close();
             }
         } catch (SQLException ex) {
             Logger.getLogger(SQLiteBD.class
@@ -218,6 +223,8 @@ public class SQLiteBD implements IntBD {
                 String max = resSet.getString("min");
                 int razminka = resSet.getInt("razminka");
                 int count = resSet.getInt("count");
+                resSet.close();
+                pstmt.close();
                 return new EPodhod(id, razminka, count, min, max);
 
             }
@@ -227,6 +234,17 @@ public class SQLiteBD implements IntBD {
             return null;
         }
         return null;
+    }
+
+    @Override
+    public boolean disconnect() {
+        try {
+            conn.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(SQLiteBD.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+        return true;
     }
 
 }
