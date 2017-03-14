@@ -14,11 +14,16 @@ import th.test.trener.eprogs.*;
  */
 public interface IntBD {
    
-    public void connect();
+    public boolean connect();
     
     public EExes getExes(int id);
+    public EPodhod getPodhod(int id);
     public EDay getDay(int id,int number);
     public EProg getProg(int id);
     
+    public boolean writeProg(EProg prog);
+    public boolean writeDay(EDay day);
+    public boolean writeExes(EExes exes);
+    public boolean writePodhod(EPodhod podhod);
     
 }

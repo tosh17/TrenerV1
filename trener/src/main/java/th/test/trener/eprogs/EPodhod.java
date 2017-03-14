@@ -5,22 +5,34 @@
  */
 package th.test.trener.eprogs;
 
+import java.util.Arrays;
+
 /**
  *
  * @author a_scherbakov
  */
 public class EPodhod {
 
+    private int id;
     private int razminka;
     private int count;
     private int[] max;
     private int[] min;
 
-    public EPodhod(int razminka, int count, int[] max, int[] min) {
+    public EPodhod(int id,int razminka, int count, int[] max, int[] min) {
+        this.id = id;
         this.razminka = razminka;
         this.count = count;
         this.max = max;
         this.min = min;
+    }
+
+    public EPodhod(int id,int razminka, int count, String max, String min) {
+        this.id = id;
+        this.razminka = razminka;
+        this.count = count;
+        this.max = stringToArray(max);
+        this.min = stringToArray(min);
     }
 
     public int[] getMin() {
@@ -57,11 +69,41 @@ public class EPodhod {
 
     @Override
     public String toString() {
-        String str= "Р(" + razminka + ")" + " П=";
+        String str = "Р(" + razminka + ")" + " П=";
         for(int i =0;i<count;i++){
         str=str+"/"+min[i]+"-"+max[i];
         }
+   
+
         return str;
     }
 
+    private String arrayToString(int mas[]) {
+        String str = "";
+        for (int i : mas) {
+            str = str + i + ",";
+        }
+        return str.substring(0, str.length() - 1);
+    }
+
+    private int[] stringToArray(String str) {
+        int mas[] = new int[count];
+        String tmp[] = str.split(",");
+        for (int i = 0; i < tmp.length; i++) {
+            mas[i] = Integer.parseInt(tmp[i]);
+        }
+        return mas;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+    public String getStrMax(){
+    return arrayToString(max); }
+    public String getStrMin(){
+    return arrayToString(min); }
 }

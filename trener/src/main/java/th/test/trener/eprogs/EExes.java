@@ -13,11 +13,10 @@ import java.util.ArrayList;
  */
 public class EExes {
 
-    public EExes(int id, String name, int idAnalog) {
+    public EExes(int id, String name) {
         this.id = id;
         this.name = name;
-        this.idAnalog = idAnalog;
-        
+            
     }
 
     @Override
@@ -42,17 +41,8 @@ public class EExes {
     public void setName(String name) {
         this.name = name;
     }
-
-    public int getIdAnalog() {
-        return idAnalog;
-    }
-
-    public void setIdAnalog(int idAnalog) {
-        this.idAnalog = idAnalog;
-    }
-
     int id;
     String name;
-    int idAnalog;
+    
   
 }

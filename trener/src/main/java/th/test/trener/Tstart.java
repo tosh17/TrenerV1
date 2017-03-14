@@ -17,16 +17,17 @@ public class Tstart {
     /**
      * @param args the command line arguments
      */
-    static IntBD base;
+    static IntBD base,base1;
 
 
     public static void main(String[] args) {
         // TODO code application logic here
-    //    base = FabricBD.createBD(FabricBD.Metod.Collection);
-      //  System.out.println(base.getProg(1));
+     base1 = FabricBD.createBD(FabricBD.Metod.Collection);
+       System.out.println(base1.getProg(1));
           base = FabricBD.createBD(FabricBD.Metod.SQLite);
          base.connect();
-         base.getExes(2);
+         base.writeDay(base1.getDay(1,2));
+     
     }
 
 }

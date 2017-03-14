@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import th.test.trener.bd.IntBD;
 import th.test.trener.eprogs.EDay;
 import th.test.trener.eprogs.EExes;
+import th.test.trener.eprogs.EPodhod;
 import th.test.trener.eprogs.EProg;
 
 /**
@@ -48,8 +49,37 @@ public class CollectionBD implements IntBD {
     }
 
     @Override
-    public void connect() {
+    public boolean connect() {
       //не требуется
+      return true;
+    }
+
+    @Override
+    public boolean writeProg(EProg prog) {
+      //не требуется
+       return false;
+    }
+
+    @Override
+    public boolean writeDay(EDay day) {
+       //не требуется
+       return false;
+    }
+
+    @Override
+    public boolean writeExes(EExes exes) {
+       //не требуется
+       return false;
+    }
+
+    @Override
+    public boolean writePodhod(EPodhod podhod) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public EPodhod getPodhod(int id) {
+        return CollExes.getPodhod(id);
     }
 
 }
