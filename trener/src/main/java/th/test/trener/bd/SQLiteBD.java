@@ -22,6 +22,7 @@ public class SQLiteBD implements IntBD {
     private static IntBD db;
 
     private SQLiteBD() {
+        connect();
     }
 
     public static IntBD init() {
@@ -94,7 +95,33 @@ public class SQLiteBD implements IntBD {
 
     @Override
     public EProg getProg(int id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        EProg prog = null;
+        try {
+            ResultSet resSet;
+            PreparedStatement pstmt = null;
+            pstmt = conn.prepareStatement("SELECT * FROM e_prog where id=?");
+            pstmt.setInt(1, id);
+            resSet = pstmt.executeQuery();
+
+            while (resSet.next()) {
+                int count = resSet.getInt("count_day");
+                String description = resSet.getString("description");
+                prog = new EProg(id, description);
+
+                // add day
+                for (int i = 1; i <= count; i++) {
+                    prog.addDay(getDay(id, i));
+                }
+            }
+
+            resSet.close();
+            pstmt.close();
+            return prog;
+
+        } catch (SQLException ex) {
+            Logger.getLogger(SQLiteBD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 
     @Override
@@ -119,7 +146,26 @@ public class SQLiteBD implements IntBD {
 
     @Override
     public boolean writeProg(EProg prog) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        ResultSet resSet;
+        PreparedStatement pstmt = null;
+        if (getProg(prog.getId()) != null) {
+            return false;
+        } else {
+            try {
+                pstmt = conn.prepareStatement("insert into e_prog  " + "VALUES (?,?,?)");
+                pstmt.setInt(1, prog.getId());
+                pstmt.setString(2, prog.getDescription());
+                pstmt.setInt(3, prog.getCountDay());
+                int rowCount = pstmt.executeUpdate();
+                for (int i = 1; i <= prog.getCountDay(); i++) {
+                    writeDay(prog.getDay(i));
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(SQLiteBD.class.getName()).log(Level.SEVERE, null, ex);
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
@@ -220,7 +266,7 @@ public class SQLiteBD implements IntBD {
             resSet = pstmt.executeQuery();
             while (resSet.next()) {
                 String min = resSet.getString("min");
-                String max = resSet.getString("min");
+                String max = resSet.getString("max");
                 int razminka = resSet.getInt("razminka");
                 int count = resSet.getInt("count");
                 resSet.close();

@@ -22,7 +22,7 @@ public interface IntBD {
     public EPodhod getPodhod(int id);
     public EDay getDay(int id,int number);
     public EProg getProg(int id);
-    
+       
     public boolean writeProg(EProg prog);
     public boolean writeDay(EDay day);
     public boolean writeExes(EExes exes);

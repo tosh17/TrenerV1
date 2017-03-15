@@ -19,7 +19,7 @@ public class EPodhod {
     private int[] max;
     private int[] min;
 
-    public EPodhod(int id,int razminka, int count, int[] max, int[] min) {
+    public EPodhod(int id,int razminka, int count, int[] min, int[] max) {
         this.id = id;
         this.razminka = razminka;
         this.count = count;
@@ -27,7 +27,7 @@ public class EPodhod {
         this.min = min;
     }
 
-    public EPodhod(int id,int razminka, int count, String max, String min) {
+    public EPodhod(int id,int razminka, int count, String min, String max) {
         this.id = id;
         this.razminka = razminka;
         this.count = count;
@@ -69,7 +69,7 @@ public class EPodhod {
 
     @Override
     public String toString() {
-        String str = "Р(" + razminka + ")" + " П=";
+        String str = "Р(" + razminka + ")" + " П";
         for(int i =0;i<count;i++){
         str=str+"/"+min[i]+"-"+max[i];
         }

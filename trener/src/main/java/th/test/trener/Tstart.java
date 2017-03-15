@@ -7,6 +7,8 @@ package th.test.trener;
 
 import th.test.trener.bd.CollectionBD;
 import th.test.trener.bd.*;
+import th.test.trener.eprogs.EProg;
+import th.test.trener.util.UDate;
 
 /**
  *
@@ -17,17 +19,11 @@ public class Tstart {
     /**
      * @param args the command line arguments
      */
-    static IntBD base,base1;
-
-
     public static void main(String[] args) {
         // TODO code application logic here
-     base1 = FabricBD.createBD(FabricBD.Metod.Collection);
-       System.out.println(base1.getProg(1));
-          base = FabricBD.createBD(FabricBD.Metod.SQLite);
-         base.connect();
-         base.writeDay(base1.getDay(1,2));
-     
+        EProg prog = EProg.load(1, FabricBD.Metod.Collection);
+        System.out.println(prog);
+        prog.save(FabricBD.Metod.SQLite);
     }
 
 }

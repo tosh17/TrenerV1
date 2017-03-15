@@ -5,7 +5,9 @@
  */
 package th.test.trener;
 
+
 import th.test.trener.bd.CollectionBD;
+import th.test.trener.bd.FabricBD;
 import th.test.trener.bd.IntBD;
 
 /**
@@ -13,13 +15,12 @@ import th.test.trener.bd.IntBD;
  * @author a_scherbakov
  */
 public class Temp {
-    IntBD base2;
-    public Temp(IntBD base){
-            base2 = CollectionBD.init();
-        if (base == base2) {
-            System.out.println("yyyyyy");
-        } else {
-            System.out.println("nnnnn");
+      static IntBD base,base1;
+    public Temp(){
+ 
         }
+   
+    public void start() {
+
     }
 }
