@@ -59,5 +59,6 @@ public class EProg {
     }
     public boolean save(FabricBD.Metod metod) {
       return FabricBD.createBD(metod).writeProg(this);
+   
     }
 }

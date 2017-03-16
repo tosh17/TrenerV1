@@ -13,7 +13,12 @@ public class FabricBD {
 
     private FabricBD() {
     }
-
+  /**
+   * Возращает интерфейс для работы с БД
+   * @param  metod 
+   *  
+   * @return 
+   */
     public static IntBD createBD(Metod metod) {
         switch(metod){
             case Collection:
@@ -25,7 +30,19 @@ public class FabricBD {
     }
 
     public enum Metod {
-        Collection, SQLite;
+        /**
+         * Метод для статичной коллекции
+         * @serial  
+         * 
+         */
+        
+        Collection, 
+        /**
+         * Метод для работы с базой sqllite
+         * @serial 
+         * 
+         */
+        SQLite;
 
     }
 }

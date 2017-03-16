@@ -13,7 +13,12 @@ import th.test.trener.eprogs.*;
  * @author a_scherbakov
  */
 public interface IntBD {
-   
+   /**
+    * @return 
+    * Соединяется с базой даных
+    * Выполняется при иницилизации автоматически
+    * 
+    */
     public boolean connect();
     public boolean disconnect();
     
