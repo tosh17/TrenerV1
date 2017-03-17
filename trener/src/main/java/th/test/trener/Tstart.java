@@ -5,9 +5,12 @@
  */
 package th.test.trener;
 
+import input.Console;
 import th.test.trener.bd.CollectionBD;
 import th.test.trener.bd.*;
+import th.test.trener.eprogs.EDay;
 import th.test.trener.eprogs.EProg;
+import th.test.trener.tprog.TProg;
 import th.test.trener.util.UDate;
 
 /**
@@ -21,9 +24,12 @@ public class Tstart {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        EProg prog = EProg.load(1, FabricBD.Metod.Collection);
-        System.out.println(prog);
-        prog.save(FabricBD.Metod.SQLite);
+       Console cons=new Console();
+       int i=cons.getInputInt("Введите номер дня");
+       EDay day=FabricBD.createBD(FabricBD.Metod.SQLite).getDay(1, i);
+       System.out.println(day);
+       TProg tprog=new TProg(FabricBD.createBD(FabricBD.Metod.SQLite).getProg(1));
+       tprog.start();
     }
 
 }
