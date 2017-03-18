@@ -18,7 +18,7 @@ public class Tstart {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         // TODO code application logic here
 //       Console cons=new Console();
 //       int i=cons.getInputInt("Введите номер дня");
@@ -27,10 +27,12 @@ public class Tstart {
 //       TProg tprog=new TProg(FactoryBD.createBD(FactoryBD.Metod.SQLite).getProg(1));
 //       tprog.start();
 
-    User tosh=new User(3);
-    System.out.println(UDate.nowDate());
-    System.out.println(UDate.dataString(UDate.nowDate()));
-     System.out.println(UDate.timeString(UDate.nowTime()));
+    User user=new User(3);
+  user.start();
+  for(int i=0;i<1000;i++){
+      user.start();
+      Thread.sleep(500);
+  }
     }
 
 }

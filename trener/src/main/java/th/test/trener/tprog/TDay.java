@@ -6,6 +6,8 @@
 package th.test.trener.tprog;
 
 import input.Console;
+import input.IntInput;
+import input.RVirtConsole;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,13 +39,13 @@ public class TDay {
     }
 
     public void start() {
-        Console cons = new Console();
+        IntInput cons = new RVirtConsole();
 
         for (int i = 1; i <= eDay.getCount(); i++) {
             System.out.println(eDay.getExes(i));
             System.out.println(eDay.getPodhod(i));
             while (!listExes.get(i).isDone()) {
-                listExes.get(i).makeExes(cons.getInputInt("Кол раз"), cons.getInputInt("вес"));
+                listExes.get(i).makeExes(cons.getInputInt("12"), cons.getInputInt("80"));
             }
         }
     }

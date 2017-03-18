@@ -37,11 +37,15 @@ public interface IntBD {
     public EProg getProg(int id);
     public boolean writeProg(EProg prog);
 
- //   public boolean writeTExes(int[] write);
+   public boolean writeTExes(int[] write);
     
     public User getUser(int id);
     public User getUserByNick(String nick);
     public boolean writeUser(User user);
     public boolean updateUser(User user);
+    
+    public int[] findEProgIdByUser(int idUser);
+    public boolean writeLogT();
+    
 
 }

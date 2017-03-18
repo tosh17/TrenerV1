@@ -11,7 +11,9 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import th.test.trener.tprog.TExes;
+import th.test.trener.user.Environment;
 import th.test.trener.user.User;
+import th.test.trener.util.UDate;
 
 /**
  *
@@ -295,12 +297,12 @@ public class SQLiteBD implements IntBD {
         return true;
     }
 
-//    @Override
+    @Override
     public boolean writeTExes(int[] write) {
         try {
             PreparedStatement pstmt = null;
-            pstmt = conn.prepareStatement("insert into e_prog  " + "VALUES (?,?,?,?,?,?,?,?)");
-            for (int i = 0; i < 8; i++) {
+            pstmt = conn.prepareStatement("insert into log_t_day  " + "VALUES (?,?,?,?,?,?)");
+            for (int i = 0; i < 6; i++) {
                 pstmt.setInt(i + 1, write[i]);
             }
 
@@ -323,8 +325,8 @@ public class SQLiteBD implements IntBD {
             pstmt.setInt(1, id);
             resSet = pstmt.executeQuery();
             while (resSet.next()) {
-                user = new User(id,resSet.getString("name"), resSet.getString("nick"),resSet.getInt("start_date"));
-              
+                user = new User(id, resSet.getString("name"), resSet.getString("nick"), resSet.getInt("start_date"));
+
             }
             resSet.close();
             pstmt.close();
@@ -334,9 +336,10 @@ public class SQLiteBD implements IntBD {
         }
         return user;
     }
-   @Override
+
+    @Override
     public User getUserByNick(String nick) {
-            User user = null;
+        User user = null;
         try {
             ResultSet resSet;
             PreparedStatement pstmt = null;
@@ -344,7 +347,7 @@ public class SQLiteBD implements IntBD {
             pstmt.setString(1, nick);
             resSet = pstmt.executeQuery();
             while (resSet.next()) {
-              user = new User(resSet.getInt("id"),resSet.getString("name"), nick,resSet.getInt("start_date"));
+                user = new User(resSet.getInt("id"), resSet.getString("name"), nick, resSet.getInt("start_date"));
             }
             resSet.close();
             pstmt.close();
@@ -354,6 +357,7 @@ public class SQLiteBD implements IntBD {
         }
         return user;
     }
+
     @Override
     public boolean writeUser(User user) {
         try {
@@ -379,6 +383,72 @@ public class SQLiteBD implements IntBD {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
- 
+    @Override
+    public int[] findEProgIdByUser(int idUser) {
+        int res[] = {0, 0};
+        try {
+
+            ResultSet resSet;
+            PreparedStatement pstmt = null;
+            pstmt = conn.prepareStatement("select * from log_tren where user=? order by id_tren Desc limit 1 ");
+            pstmt.setInt(1, idUser);
+            resSet = pstmt.executeQuery();
+            int tmp;
+            while (resSet.next()) {
+                tmp = resSet.getInt("id_day");
+
+                pstmt = conn.prepareStatement("select * from e_day where id=?  ");
+                pstmt.setInt(1, tmp);
+                resSet = pstmt.executeQuery();
+
+                while (resSet.next()) {
+                    res[0] = resSet.getInt("id_prog");
+                    res[1] = resSet.getInt("number_day");
+                }
+            }
+
+            resSet.close();
+            pstmt.close();
+            return res;
+        } catch (SQLException ex) {
+            Logger.getLogger(SQLiteBD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return res;
+    }
+
+    @Override
+    public boolean writeLogT() {
+        try {
+            PreparedStatement pstmt = null;
+            pstmt = conn.prepareStatement("select * from e_day where id_prog=? and number_day=?");
+            pstmt.setInt(1, Environment.init().getCurrentProg());
+            pstmt.setInt(2, Environment.init().getCurrentProgDay());
+            ResultSet resSet = pstmt.executeQuery();
+            int idEDay;
+            while (resSet.next()) {
+                idEDay = resSet.getInt("id");
+
+                pstmt = conn.prepareStatement("insert into log_tren  (user,date,id_day)" + "VALUES (?,?,?)");
+
+                pstmt.setInt(1, Environment.init().getCurrentUser());
+                pstmt.setInt(2, UDate.nowDate());
+                pstmt.setInt(3, idEDay);
+                int rowCount = pstmt.executeUpdate();
+
+                pstmt = conn.prepareStatement("select * from log_tren where user=? and date=? order by date Desc limit 1");
+                pstmt.setInt(1, Environment.init().getCurrentUser());
+                pstmt.setInt(2, UDate.nowDate());
+                 resSet = pstmt.executeQuery();
+                 while (resSet.next()) {
+                  Environment.init().setCurrentIdTLog(resSet.getInt("id_tren"));
+                 }
+            }
+        } catch (SQLException ex) {
+
+            Logger.getLogger(SQLiteBD.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+        return true;
+    }
 
 }

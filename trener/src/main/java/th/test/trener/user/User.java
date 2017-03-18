@@ -6,6 +6,8 @@
 package th.test.trener.user;
 
 import th.test.trener.bd.FactoryBD;
+import th.test.trener.tprog.TExes;
+import th.test.trener.tprog.TProg;
 import th.test.trener.util.UDate;
 
 /**
@@ -92,5 +94,17 @@ public class User {
         return false;
     }
 
- 
+    public void start() {
+        Environment.init().setCurrentUser(this.getId());
+        int[] progDay = FactoryBD.createBD().findEProgIdByUser(id);
+        if (progDay[0] == 0) {
+            progDay[0] = 1;
+            progDay[1] = 0;
+        }
+        Environment.init().setCurrentProg(progDay[0]);
+        Environment.init().setCurrentProgDay(progDay[1]);
+        TProg tProg=new TProg(progDay[0],progDay[1]);
+        tProg.start();
+    }
+
 }

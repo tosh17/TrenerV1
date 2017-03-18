@@ -29,8 +29,8 @@ public class UDate {
     }
 
     public static int nowDate() {
-
-        return getNowSec() / (60 * 60 * 24);
+return getNowSec() % (60 * 60 * 24);
+     //   return getNowSec() / (60 * 60 * 24);
 
     }
 
