@@ -7,8 +7,11 @@ package th.test.trener.bd;
 
 import th.test.trener.eprogs.*;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import th.test.trener.tprog.TExes;
+import th.test.trener.user.User;
 
 /**
  *
@@ -34,6 +37,37 @@ public class SQLiteBD implements IntBD {
     }
 
     @Override
+    public boolean connect() {
+        try {
+            conn = null;
+            Class.forName("org.sqlite.JDBC");
+            conn = DriverManager.getConnection("jdbc:sqlite:tren.db");
+
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(SQLiteBD.class
+                    .getName()).log(Level.SEVERE, null, ex);
+            return false;
+
+        } catch (SQLException ex) {
+            Logger.getLogger(SQLiteBD.class
+                    .getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean disconnect() {
+        try {
+            conn.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(SQLiteBD.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+        return true;
+    }
+
+    @Override
     public EExes getExes(int id) {
         ResultSet resSet;
         PreparedStatement pstmt = null;
@@ -53,6 +87,84 @@ public class SQLiteBD implements IntBD {
         }
 
         return null;
+    }
+
+    @Override
+    public boolean writeExes(EExes exes) {
+        ResultSet resSet;
+        PreparedStatement pstmt = null;
+        try {
+            if (getExes(exes.getId()) != null) {
+                return false;
+            } else {
+
+                pstmt = conn.prepareStatement("INSERT INTO `e_exes` " + "VALUES (?,?)");
+                pstmt.setInt(1, exes.getId());
+                pstmt.setString(2, exes.getName());
+                int rowCount = pstmt.executeUpdate();
+
+                pstmt.close();
+
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(SQLiteBD.class
+                    .getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public EPodhod getPodhod(int id) {
+        ResultSet resSet;
+        PreparedStatement pstmt = null;
+        try {
+            //  resSet = statmt.executeQuery("SELECT * FROM e_exes");
+            pstmt = conn.prepareStatement("SELECT * FROM e_podhod where id=?");
+            pstmt.setInt(1, id);
+            resSet = pstmt.executeQuery();
+            while (resSet.next()) {
+                String min = resSet.getString("min");
+                String max = resSet.getString("max");
+                int razminka = resSet.getInt("razminka");
+                int count = resSet.getInt("count");
+                resSet.close();
+                pstmt.close();
+                return new EPodhod(id, razminka, count, min, max);
+
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(SQLiteBD.class
+                    .getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+        return null;
+    }
+
+    @Override
+    public boolean writePodhod(EPodhod podhod) {
+        ResultSet resSet;
+        PreparedStatement pstmt = null;
+        try {
+            if (getPodhod(podhod.getId()) != null) {
+                return false;
+            } else {
+
+                pstmt = conn.prepareStatement("INSERT INTO `e_podhod` " + "VALUES (?,?,?,?,?)");
+                pstmt.setInt(1, podhod.getId());
+                pstmt.setInt(2, podhod.getRazminka());
+                pstmt.setInt(3, podhod.getCount());
+                pstmt.setString(4, podhod.getStrMin());
+                pstmt.setString(5, podhod.getStrMax());
+                int rowCount = pstmt.executeUpdate();
+                pstmt.close();
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(SQLiteBD.class
+                    .getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -94,81 +206,6 @@ public class SQLiteBD implements IntBD {
     }
 
     @Override
-    public EProg getProg(int id) {
-        EProg prog = null;
-        try {
-            ResultSet resSet;
-            PreparedStatement pstmt = null;
-            pstmt = conn.prepareStatement("SELECT * FROM e_prog where id=?");
-            pstmt.setInt(1, id);
-            resSet = pstmt.executeQuery();
-
-            while (resSet.next()) {
-                int count = resSet.getInt("count_day");
-                String description = resSet.getString("description");
-                prog = new EProg(id, description);
-
-                // add day
-                for (int i = 1; i <= count; i++) {
-                    prog.addDay(getDay(id, i));
-                }
-            }
-
-            resSet.close();
-            pstmt.close();
-            return prog;
-
-        } catch (SQLException ex) {
-            Logger.getLogger(SQLiteBD.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
-    }
-
-    @Override
-    public boolean connect() {
-        try {
-            conn = null;
-            Class.forName("org.sqlite.JDBC");
-            conn = DriverManager.getConnection("jdbc:sqlite:tren.db");
-
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(SQLiteBD.class
-                    .getName()).log(Level.SEVERE, null, ex);
-            return false;
-
-        } catch (SQLException ex) {
-            Logger.getLogger(SQLiteBD.class
-                    .getName()).log(Level.SEVERE, null, ex);
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public boolean writeProg(EProg prog) {
-        ResultSet resSet;
-        PreparedStatement pstmt = null;
-        if (getProg(prog.getId()) != null) {
-            return false;
-        } else {
-            try {
-                pstmt = conn.prepareStatement("insert into e_prog  " + "VALUES (?,?,?)");
-                pstmt.setInt(1, prog.getId());
-                pstmt.setString(2, prog.getDescription());
-                pstmt.setInt(3, prog.getCountDay());
-                int rowCount = pstmt.executeUpdate();
-                for (int i = 1; i <= prog.getCountDay(); i++) {
-                    writeDay(prog.getDay(i));
-                }
-            } catch (SQLException ex) {
-                Logger.getLogger(SQLiteBD.class.getName()).log(Level.SEVERE, null, ex);
-                return false;
-            }
-        }
-        return true;
-    }
-
-    @Override
     public boolean writeDay(EDay day) {
         ResultSet resSet;
         PreparedStatement pstmt = null;
@@ -205,92 +242,143 @@ public class SQLiteBD implements IntBD {
     }
 
     @Override
-    public boolean writeExes(EExes exes) {
-        ResultSet resSet;
-        PreparedStatement pstmt = null;
+    public EProg getProg(int id) {
+        EProg prog = null;
         try {
-            if (getExes(exes.getId()) != null) {
-                return false;
-            } else {
-
-                pstmt = conn.prepareStatement("INSERT INTO `e_exes` " + "VALUES (?,?)");
-                pstmt.setInt(1, exes.getId());
-                pstmt.setString(2, exes.getName());
-                int rowCount = pstmt.executeUpdate();
-
-                pstmt.close();
-
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(SQLiteBD.class
-                    .getName()).log(Level.SEVERE, null, ex);
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public boolean writePodhod(EPodhod podhod) {
-        ResultSet resSet;
-        PreparedStatement pstmt = null;
-        try {
-            if (getPodhod(podhod.getId()) != null) {
-                return false;
-            } else {
-
-                pstmt = conn.prepareStatement("INSERT INTO `e_podhod` " + "VALUES (?,?,?,?,?)");
-                pstmt.setInt(1, podhod.getId());
-                pstmt.setInt(2, podhod.getRazminka());
-                pstmt.setInt(3, podhod.getCount());
-                pstmt.setString(4, podhod.getStrMin());
-                pstmt.setString(5, podhod.getStrMax());
-                int rowCount = pstmt.executeUpdate();
-                pstmt.close();
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(SQLiteBD.class
-                    .getName()).log(Level.SEVERE, null, ex);
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public EPodhod getPodhod(int id) {
-        ResultSet resSet;
-        PreparedStatement pstmt = null;
-        try {
-            //  resSet = statmt.executeQuery("SELECT * FROM e_exes");
-            pstmt = conn.prepareStatement("SELECT * FROM e_podhod where id=?");
+            ResultSet resSet;
+            PreparedStatement pstmt = null;
+            pstmt = conn.prepareStatement("SELECT * FROM e_prog where id=?");
             pstmt.setInt(1, id);
             resSet = pstmt.executeQuery();
-            while (resSet.next()) {
-                String min = resSet.getString("min");
-                String max = resSet.getString("max");
-                int razminka = resSet.getInt("razminka");
-                int count = resSet.getInt("count");
-                resSet.close();
-                pstmt.close();
-                return new EPodhod(id, razminka, count, min, max);
 
+            while (resSet.next()) {
+                int count = resSet.getInt("count_day");
+                String description = resSet.getString("description");
+                prog = new EProg(id, description);
+
+                // add day
+                for (int i = 1; i <= count; i++) {
+                    prog.addDay(getDay(id, i));
+                }
             }
+
+            resSet.close();
+            pstmt.close();
+            return prog;
+
         } catch (SQLException ex) {
-            Logger.getLogger(SQLiteBD.class
-                    .getName()).log(Level.SEVERE, null, ex);
-            return null;
+            Logger.getLogger(SQLiteBD.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }
 
     @Override
-    public boolean disconnect() {
+    public boolean writeProg(EProg prog) {
+        PreparedStatement pstmt = null;
+        if (getProg(prog.getId()) != null) {
+            return false;
+        } else {
+            try {
+                pstmt = conn.prepareStatement("insert into e_prog  " + "VALUES (?,?,?)");
+                pstmt.setInt(1, prog.getId());
+                pstmt.setString(2, prog.getDescription());
+                pstmt.setInt(3, prog.getCountDay());
+                int rowCount = pstmt.executeUpdate();
+                for (int i = 1; i <= prog.getCountDay(); i++) {
+                    writeDay(prog.getDay(i));
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(SQLiteBD.class.getName()).log(Level.SEVERE, null, ex);
+                return false;
+            }
+        }
+        return true;
+    }
+
+//    @Override
+    public boolean writeTExes(int[] write) {
         try {
-            conn.close();
+            PreparedStatement pstmt = null;
+            pstmt = conn.prepareStatement("insert into e_prog  " + "VALUES (?,?,?,?,?,?,?,?)");
+            for (int i = 0; i < 8; i++) {
+                pstmt.setInt(i + 1, write[i]);
+            }
+
+            int rowCount = pstmt.executeUpdate();
         } catch (SQLException ex) {
+
             Logger.getLogger(SQLiteBD.class.getName()).log(Level.SEVERE, null, ex);
             return false;
         }
         return true;
     }
+
+    @Override
+    public User getUser(int id) {
+        User user = null;
+        try {
+            ResultSet resSet;
+            PreparedStatement pstmt = null;
+            pstmt = conn.prepareStatement("SELECT * FROM user where id=?");
+            pstmt.setInt(1, id);
+            resSet = pstmt.executeQuery();
+            while (resSet.next()) {
+                user = new User(id,resSet.getString("name"), resSet.getString("nick"),resSet.getInt("start_date"));
+              
+            }
+            resSet.close();
+            pstmt.close();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(SQLiteBD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return user;
+    }
+   @Override
+    public User getUserByNick(String nick) {
+            User user = null;
+        try {
+            ResultSet resSet;
+            PreparedStatement pstmt = null;
+            pstmt = conn.prepareStatement("SELECT * FROM user where nick=?");
+            pstmt.setString(1, nick);
+            resSet = pstmt.executeQuery();
+            while (resSet.next()) {
+              user = new User(resSet.getInt("id"),resSet.getString("name"), nick,resSet.getInt("start_date"));
+            }
+            resSet.close();
+            pstmt.close();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(SQLiteBD.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return user;
+    }
+    @Override
+    public boolean writeUser(User user) {
+        try {
+            PreparedStatement pstmt = null;
+            pstmt = conn.prepareStatement("insert into user  (name,nick,start_date)" + "VALUES (?,?,?)");
+
+            pstmt.setString(1, user.getName());
+            pstmt.setString(2, user.getNick());
+            pstmt.setInt(3, user.getStartData());
+
+            int rowCount = pstmt.executeUpdate();
+        } catch (SQLException ex) {
+
+            Logger.getLogger(SQLiteBD.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean updateUser(User user
+    ) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+ 
 
 }

@@ -7,7 +7,7 @@ package th.test.trener.eprogs;
 
 import java.util.HashMap;
 import java.util.Map;
-import th.test.trener.bd.FabricBD;
+import th.test.trener.bd.FactoryBD;
 
 /**
  *
@@ -54,11 +54,11 @@ public class EProg {
         return countDay;
     }
 
-    public static EProg load(int id, FabricBD.Metod metod) {
-        return FabricBD.createBD(metod).getProg(id);
+    public static EProg load(int id, FactoryBD.Metod metod) {
+        return FactoryBD.createBD(metod).getProg(id);
     }
-    public boolean save(FabricBD.Metod metod) {
-      return FabricBD.createBD(metod).writeProg(this);
+    public boolean save(FactoryBD.Metod metod) {
+      return FactoryBD.createBD(metod).writeProg(this);
    
     }
 }

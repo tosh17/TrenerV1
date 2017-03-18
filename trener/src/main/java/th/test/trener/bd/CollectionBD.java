@@ -12,6 +12,8 @@ import th.test.trener.eprogs.EDay;
 import th.test.trener.eprogs.EExes;
 import th.test.trener.eprogs.EPodhod;
 import th.test.trener.eprogs.EProg;
+import th.test.trener.tprog.TExes;
+import th.test.trener.user.User;
 
 /**
  *
@@ -19,7 +21,7 @@ import th.test.trener.eprogs.EProg;
  */
 public class CollectionBD implements IntBD {
 
-    static boolean stat = true;
+    private static boolean stat = true;
     static IntBD db;
 
     private CollectionBD() {
@@ -87,6 +89,26 @@ public class CollectionBD implements IntBD {
     public boolean disconnect() {
         //не требуется
        return true;
+    }
+
+    @Override
+    public User getUser(int id) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public User getUserByNick(String nick) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean writeUser(User user) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean updateUser(User user) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

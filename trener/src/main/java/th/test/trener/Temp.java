@@ -7,7 +7,7 @@ package th.test.trener;
 
 
 import th.test.trener.bd.CollectionBD;
-import th.test.trener.bd.FabricBD;
+import th.test.trener.bd.FactoryBD;
 import th.test.trener.bd.IntBD;
 
 /**

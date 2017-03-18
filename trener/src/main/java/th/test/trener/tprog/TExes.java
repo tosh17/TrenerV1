@@ -6,7 +6,9 @@
 package th.test.trener.tprog;
 
 import java.util.ArrayList;
+import th.test.trener.bd.FactoryBD;
 import th.test.trener.eprogs.*;
+import th.test.trener.util.UDate;
 
 /**
  *
@@ -20,7 +22,7 @@ public class TExes {
 
     private int razminka, count;
     private int countRazminka[], countCount[], weightRazminka[], weightCount[];
-
+    private int[] write = {1,0,0,0,0,0,0,0};
     boolean done;
 
     public TExes(EExes exes, EPodhod podhod) {
@@ -36,6 +38,8 @@ public class TExes {
         weightCount = new int[t2];
         razminka = 0;
         count = 0;
+        
+        
     }
 
     public boolean isDone() {
@@ -59,6 +63,7 @@ public class TExes {
             countRazminka[razminka] = count;
             weightRazminka[razminka] = weight;
             razminka++;
+//            save(UDate.nowDate(),UDate.nowTime(),)
         } else {
             countCount[this.count] = count;
             weightCount[this.count] = weight;
@@ -69,8 +74,8 @@ public class TExes {
 
     float progress;
 
-    public boolean save() {
-        return false;
-    }
-
+//    public boolean save(int date,int time,int id_day,int id_exes) {
+//        return FactoryBD.createBD().writeTExes(write);
+//    }
+    
 }
